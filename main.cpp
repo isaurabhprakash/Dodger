@@ -17,7 +17,7 @@ void reshape(int w, int h)
 	double asp=(float)w/(float)h;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-		glOrtho(0,500,0,500,-10,10);
+    glOrtho(0,500,0,500,-10,10);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glutPostRedisplay();
@@ -25,8 +25,7 @@ void reshape(int w, int h)
 }
 void startScreenDisplay()
 {
-
-	char text0[]="DODGER\n";
+    char text0[]="DODGER\n";
 	char text1[]="Press 1 to Play\n";
 	char text2[]="Press 2 for Instructions\n";
 	char dev[]="Developed by\n";
@@ -80,15 +79,11 @@ void displayInstructions()
 	{
 		glRasterPos2f(50,height);
 		for(j=0;j<sizeof(text[i]);j++)
-		{
-				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text[i][j]);
-		}
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text[i][j]);
 		height=height-50;
 	}
-		glFlush();
-		glutSwapBuffers();
-
-
+    glFlush();
+    glutSwapBuffers();
 }
 
 void display()
@@ -96,14 +91,11 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	switch(gamestate)
 	{
-
-		case startScreen: startScreenDisplay();
+        case startScreen: startScreenDisplay();
 		break;
 		case instructionScreen: displayInstructions();
 		break;
 	}
-
-
 }
 void myinit()
 {
@@ -118,14 +110,14 @@ void keyboard(unsigned char key, int x, int y)
 
 		case '2': if(gamestate == startScreen)
                     {
-                    gamestate=instructionScreen;
-                    glutPostRedisplay();
+                        gamestate=instructionScreen;
+                        glutPostRedisplay();
                     }
                     break;
 		case 'b': if(gamestate == instructionScreen)
                   {
-                    gamestate=startScreen;
-                    glutPostRedisplay();
+                     gamestate=startScreen;
+                     glutPostRedisplay();
                   }
 
 	}
@@ -139,7 +131,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 	glutInitWindowSize(600,600);
 	glutInitWindowPosition(400,0);
-	glutCreateWindow("Star Rage");
+	glutCreateWindow("Dodger");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
