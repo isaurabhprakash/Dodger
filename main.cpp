@@ -3,6 +3,7 @@
 #include<iostream>
 #include<math.h>
 #define startScreen 2
+#define instructionScreen 3
 using namespace std;
 int WIDTH = 600;
 int HEIGHT = 600;
@@ -69,6 +70,26 @@ void startScreenDisplay()
 	glutPostRedisplay();
 	glutSwapBuffers();
 }
+void displayInstructions()
+{
+	char text[][100]={"Earth is attacked by Invading Aliens.","Your job is to defend your planet","Move with the mouse","Movement is restricted only to the X-axis", "Press \'z\' to shoot","Press \'x\' to use special weapon","Press \'b\' to go back to main menu"};
+	glColor3f(1,1,1);
+	int i,j, height=450;
+	glColor3f(1,1,1);
+	for(i=0;i<7;i++)
+	{
+		glRasterPos2f(50,height);
+		for(j=0;j<sizeof(text[i]);j++)
+		{
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text[i][j]);
+		}
+		height=height-50;
+	}
+		glFlush();
+		glutSwapBuffers();
+
+
+}
 
 void display()
 {
@@ -77,6 +98,8 @@ void display()
 	{
 
 		case startScreen: startScreenDisplay();
+		break;
+		case instructionScreen: displayInstructions();
 		break;
 	}
 
@@ -87,6 +110,26 @@ void myinit()
 	int i;
 	int inc=10;
     glClearColor(20/255.0,20/255.0,20/255.0,1);
+}
+void keyboard(unsigned char key, int x, int y)
+{
+	switch(key)
+	{
+
+		case '2': if(gamestate == startScreen)
+                    {
+                    gamestate=instructionScreen;
+                    glutPostRedisplay();
+                    }
+                    break;
+		case 'b': if(gamestate == instructionScreen)
+                  {
+                    gamestate=startScreen;
+                    glutPostRedisplay();
+                  }
+
+	}
+	glutPostRedisplay();
 }
 
 
@@ -99,7 +142,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("Star Rage");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
-
+    glutKeyboardFunc(keyboard);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	glEnable(GL_TEXTURE_2D);
 	myinit();
