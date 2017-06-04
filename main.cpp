@@ -2,11 +2,14 @@
 #include<stdlib.h>
 #include<iostream>
 #include<math.h>
+#include"myship.h"
 #define startScreen 2
 #define instructionScreen 3
+#define game 0
 using namespace std;
 int WIDTH = 600;
 int HEIGHT = 600;
+myship ship;
 int gamestate=startScreen;
 
 void reshape(int w, int h)
@@ -85,12 +88,43 @@ void displayInstructions()
     glFlush();
     glutSwapBuffers();
 }
+void drawship()
+{
 
+	double x=ship.x;
+	double y=ship.y;
+	glLineWidth(1);
+	glColor3f(1,1,1);
+	if(ship.alive)
+	{
+
+		ship.displayShip();
+
+
+	}
+}
+void gamedisplay()
+{
+    drawship();
+//	drawenemy();
+//	drawbullet();
+//	drawspecial();
+//	BulletsVsEnemyCollisionTest();
+//	MyShipVsEnemyCollisionTest();
+//	SpecialWeaponVsEnemyCollisionTest();
+//	displayText();
+	glFlush();
+	system("sleep 0.00001");
+	glutSwapBuffers();
+	glutPostRedisplay();
+}
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	switch(gamestate)
 	{
+        case game: gamedisplay();
+		break;
         case startScreen: startScreenDisplay();
 		break;
 		case instructionScreen: displayInstructions();
@@ -107,6 +141,12 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch(key)
 	{
+        case '1': if(gamestate == startScreen)
+                    {
+                        gamestate=game;
+                        glutPostRedisplay();
+                    }
+                 break;
 
 		case '2': if(gamestate == startScreen)
                     {

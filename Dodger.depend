@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1496430729 source:c:\users\saurabh\desktop\dodger\main.cpp
+1496587918 source:c:\users\saurabh\desktop\dodger\main.cpp
 	<GL/glut.h>
 	<stdlib.h>
 	<iostream>
 	<math.h>
+	"myship.h"
 
 1426329928 c:\program files (x86)\codeblocks\mingw\include\gl\glut.h
 	"freeglut_std.h"
@@ -237,4 +238,6 @@
 	<stdlib.h>
 	<iostream>
 	<math.h>
+
+1496428337 c:\users\saurabh\desktop\dodger\myship.h
 
