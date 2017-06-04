@@ -3,6 +3,7 @@
 #include<iostream>
 #include<math.h>
 #include"myship.h"
+#include"bullet.h"
 #define startScreen 2
 #define instructionScreen 3
 #define game 0
@@ -10,7 +11,41 @@ using namespace std;
 int WIDTH = 600;
 int HEIGHT = 600;
 myship ship;
+bullet b[30];
 int gamestate=startScreen;
+int NumberOfBulletsPerFrame;
+int bulletspeed=26;
+void FireBulletsIfShot()
+{
+if(ship.shoot)
+	{
+		b[NumberOfBulletsPerFrame-1].fire();
+		b[NumberOfBulletsPerFrame-1].getPosition(ship);
+		ship.shoot=0;
+	}
+}
+void drawbullet()
+{
+	int i;
+
+	for(i=0;i<NumberOfBulletsPerFrame;i++)
+	{
+		if(b[i].firing)
+		{
+			b[i].draw();
+			b[i].move(bulletspeed);
+		}
+		if(b[i].y > 500)
+		{
+			b[i].reinit();
+
+		}
+	}
+	if(NumberOfBulletsPerFrame>30)
+	{
+		NumberOfBulletsPerFrame=0;
+	}
+}
 
 void reshape(int w, int h)
 {
@@ -99,20 +134,13 @@ void drawship()
 	{
 
 		ship.displayShip();
-
-
-	}
+    }
+    FireBulletsIfShot();
 }
 void gamedisplay()
 {
     drawship();
-//	drawenemy();
-//	drawbullet();
-//	drawspecial();
-//	BulletsVsEnemyCollisionTest();
-//	MyShipVsEnemyCollisionTest();
-//	SpecialWeaponVsEnemyCollisionTest();
-//	displayText();
+	drawbullet();
 	glFlush();
 	system("sleep 0.00001");
 	glutSwapBuffers();
@@ -141,6 +169,12 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch(key)
 	{
+
+        case 'Z':
+		case 'z':	if(ship.alive)
+					{ship.shoot=1;
+				NumberOfBulletsPerFrame++;}
+			break;
         case '1': if(gamestate == startScreen)
                     {
                         gamestate=game;
