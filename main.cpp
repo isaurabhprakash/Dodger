@@ -46,7 +46,11 @@ void drawbullet()
 		NumberOfBulletsPerFrame=0;
 	}
 }
-
+void move(int x, int y)
+{
+	ship.x=x;
+	glutPostRedisplay();
+}
 void reshape(int w, int h)
 {
 	HEIGHT=h;
@@ -142,7 +146,7 @@ void gamedisplay()
     drawship();
 	drawbullet();
 	glFlush();
-	system("sleep 0.00001");
+	system("Sleep 0.00001");
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
@@ -208,6 +212,7 @@ int main(int argc, char** argv)
 	glutCreateWindow("Dodger");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
+    glutPassiveMotionFunc(move);
     glutKeyboardFunc(keyboard);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	glEnable(GL_TEXTURE_2D);
