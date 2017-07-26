@@ -3,16 +3,21 @@
 #include<iostream>
 #include<math.h>
 #include"myship.h"
+#include"enemy.h"
 #include"bullet.h"
 #define startScreen 2
 #define instructionScreen 3
 #define game 0
 using namespace std;
+extern int enemyX[481];
+enemy e[50];
+float enemyspeed=2;
 int WIDTH = 600;
 int HEIGHT = 600;
 myship ship;
 bullet b[30];
 int gamestate=startScreen;
+int NumberOfEnemiesPerFrame=2;
 int NumberOfBulletsPerFrame;
 int bulletspeed=26;
 void FireBulletsIfShot()
@@ -46,9 +51,36 @@ void drawbullet()
 		NumberOfBulletsPerFrame=0;
 	}
 }
+void drawenemy()
+{
+
+	int i;
+	for(i=0;i<NumberOfEnemiesPerFrame;i++)
+	{
+		if(e[i].alive)
+		{
+			e[i].draw();
+			e[i].move(enemyspeed);
+			if((e[i].y-10) < 0)
+			{
+				e[i].init();
+			}
+		}
+		if(e[i].explode==1)
+		{
+			//e[i].explosion();
+			if(e[i].r == 20)
+			{
+				e[i].init();
+			}
+        }
+	}
+}
 void move(int x, int y)
 {
+	if(x>=33&&x<=467)
 	ship.x=x;
+	cout<<ship.x<<endl;
 	glutPostRedisplay();
 }
 void reshape(int w, int h)
@@ -143,10 +175,11 @@ void drawship()
 }
 void gamedisplay()
 {
+    drawenemy();
     drawship();
 	drawbullet();
 	glFlush();
-	system("Sleep 0.00001");
+	Sleep(4);
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
@@ -168,6 +201,11 @@ void myinit()
 	int i;
 	int inc=10;
     glClearColor(20/255.0,20/255.0,20/255.0,1);
+    for(i=0;i<481;i++)
+	{
+		enemyX[i]=inc;
+		inc++;
+	}
 }
 void keyboard(unsigned char key, int x, int y)
 {
@@ -218,6 +256,7 @@ int main(int argc, char** argv)
 	glEnable(GL_TEXTURE_2D);
 	myinit();
 	glutMainLoop();
+	return 0;
 }
 
 

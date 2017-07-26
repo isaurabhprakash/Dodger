@@ -43,6 +43,7 @@
 			<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/lib" />
 		</Linker>
 		<Unit filename="bullet.h" />
+		<Unit filename="enemy.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="myship.h" />
 		<Extensions>
