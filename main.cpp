@@ -99,6 +99,39 @@ void BulletsVsEnemyCollisionTest()
 		}
 	}
 }
+void MyShipVsEnemyCollisionTest()
+{
+
+	int i;
+	for(i=0;i<NumberOfEnemiesPerFrame;i++)
+	{
+		if(e[i].alive)
+		{
+			if( ( (ship.x-7.5 >= e[i].x-10) && (ship.x-7.5 <= e[i].x+10) && ship.alive ) || ( (ship.x+7.5 >= e[i].x-10) && (ship.x+7.5 <= e[i].x+10) && ship.alive ) )
+			{
+				if(((ship.y+15 >= e[i].y-20) && (ship.y+15 <= e[i].y+20) )|| ((ship.y+30 >= e[i].y-20) && (ship.y+30 <= e[i].y+20)))
+				{
+					hea=hea-5;
+					if(hea < 0) {hea=0;ship.alive =0;ship.explode=1;}
+					e[i].alive=0;
+					e[i].explode=1;
+				}
+			}
+			if( ( (ship.x-30 >= e[i].x-10) && (ship.x-30 <= e[i].x+10) && ship.alive ) || ( (ship.x+30 >= e[i].x-10) && (ship.x+30 <= e[i].x+10) ) && ship.alive )
+			{
+				if(((ship.y-15 >= e[i].y-20) && (ship.y-15 <= e[i].y+20) )|| ((ship.y+15 >= e[i].y-20) && (ship.y+15 <= e[i].y+20)))
+				{
+					hea=hea-2;
+					if(hea< 0) {hea=0;ship.alive=0;ship.explode=1;}
+					e[i].alive=0;
+					e[i].explode=1;
+				}
+			}
+		}
+	}
+
+}
+
 void move(int x, int y)
 {
 	if(x>=33&&x<=467)
