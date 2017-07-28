@@ -76,6 +76,29 @@ void drawenemy()
         }
 	}
 }
+void BulletsVsEnemyCollisionTest()
+{
+
+	int i;
+	int j;
+	for(i=0;i<NumberOfBulletsPerFrame;i++)
+	{
+		for(j=0;j<NumberOfEnemiesPerFrame;j++)
+		if((e[j].x-10)<=b[i].x && b[i].x <= (e[j].x+10) && e[j].alive)
+		{
+			if((b[i].y+20)>= (e[j].y-20) && (b[i].y+20) <= (e[j].y+20))
+			{
+				e[j].alive=0;
+				e[j].explode=1;
+				b[i].firing=0;
+				b[i].x=0;
+				b[i].y=0;
+				sco +=1;
+				level++;
+			}
+		}
+	}
+}
 void move(int x, int y)
 {
 	if(x>=33&&x<=467)
