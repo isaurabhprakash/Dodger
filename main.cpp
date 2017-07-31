@@ -2,27 +2,86 @@
 #include<stdlib.h>
 #include<iostream>
 #include<math.h>
+#include"star.h"
 #include"myship.h"
 #include"enemy.h"
 #include"bullet.h"
-#define startScreen 2
+#include"special.h"
+#define n 500
 #define instructionScreen 3
+#define startScreen 2
 #define game 0
+#define over 1
 using namespace std;
 extern int enemyX[481];
-enemy e[50];
-float enemyspeed=2;
 int WIDTH = 600;
 int HEIGHT = 600;
 myship ship;
+star s[n];
 bullet b[30];
-int sco;
-int hea=50;
-int level;
-int gamestate=startScreen;
-int NumberOfEnemiesPerFrame=2;
 int NumberOfBulletsPerFrame;
+enemy e[50];
+special sp;
+char score[]="Score:";
+char health[]="Health:";
+int sco;
+int NumberOfEnemiesPerFrame=2;
+int level;
+float enemyspeed=2;
 int bulletspeed=26;
+int hea=50;
+int gamestate=startScreen;
+int spec=9;
+int count_stars=0;
+void showstars_home()
+{
+	int i;
+
+	for(i=0;i<n;i++)
+	{
+		if(i%10==0)
+            count_stars++;
+		if(s[i].y >= 0)
+		{
+			if(count_stars%4==0)
+			{
+			    s[i].show();
+                s[i].move();
+			}
+		}
+		else
+		{
+			s[i].y=500;
+			s[i].x=rand()%500;
+		}
+	}
+
+}
+void showstars()
+{
+	int i;
+
+	for(i=0;i<n;i++)
+	{
+		if(i%10==0)
+            count_stars++;
+
+		if(s[i].y >= 0)
+		{
+			if(count_stars%4==0)
+			{
+                s[i].show();
+                s[i].move();
+			}
+        }
+		else
+		{
+			s[i].y=500;
+			s[i].x=rand()%500;
+		}
+	}
+
+}
 void FireBulletsIfShot()
 {
 if(ship.shoot)
@@ -31,6 +90,27 @@ if(ship.shoot)
 		b[NumberOfBulletsPerFrame-1].getPosition(ship);
 		ship.shoot=0;
 	}
+}
+void drawship()
+{
+
+	double x=ship.x;
+	double y=ship.y;
+	glLineWidth(1);
+	glColor3f(1,1,1);
+	if(ship.alive)
+	{
+
+		ship.displayShip();
+    }
+	else if(ship.explode)
+	{
+		ship.explosion();
+		gamestate=over;
+		glutPostRedisplay();
+	}
+	FireBulletsIfShot();
+
 }
 void drawbullet()
 {
@@ -71,7 +151,6 @@ void drawenemy()
 		}
 		if(e[i].explode==1)
 		{
-			//e[i].explosion();
 			if(e[i].r == 20)
 			{
 				e[i].init();
@@ -135,11 +214,128 @@ void MyShipVsEnemyCollisionTest()
 
 }
 
+void SpecialWeaponVsEnemyCollisionTest()
+{
+	int i;
+	if(sp.firing)
+	for(i=0;i<NumberOfEnemiesPerFrame;i++)
+	{
+		if(sp.y >= e[i].y-20 && sp.y <= e[i].y+20 && e[i].alive)
+		{
+			e[i].alive=0;
+			e[i].explode=1;
+			sco++;
+			level++;
+		}
+	}
+}
+
+void displayText()
+{
+	char spe[]="Special:";
+	int temp=sco;
+	char ch[3]={'0','0','0'};
+	char c;
+	int rem;
+	glColor3f(0,0,1);
+	glRasterPos2f(400,470);
+	int i;
+	for(i=0;i<sizeof(score);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,score[i]);
+	i=2;
+	do
+	{
+		rem=temp%10;
+		temp=temp/10;
+		c='0'+rem;
+		ch[i]=c;
+		i--;
+	}while(temp);
+	for(i=0;i<sizeof(ch);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,ch[i]);
+
+ 	for(i=0;i<3;i++)
+ 	{
+ 		ch[i]='0';
+ 	}
+
+	 glRasterPos2f(0,470);
+
+        for(i=0;i<sizeof(health);i++)
+                glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,health[i]);
+
+        temp=hea;
+
+        i=2;
+        do
+        {
+                rem=temp%10;
+                temp=temp/10;
+                c='0'+rem;
+                ch[i]=c;
+                i--;
+        }while(temp);
+        for(i=0;i<sizeof(ch);i++)
+                glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,ch[i]);
+
+        glRasterPos2f(0,450);
+        for(i=0;i<sizeof(spe);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,spe[i]);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,c='0'+spec);
+
+}
+
+void drawspecial()
+{
+	if(sp.shoot)
+	{
+		sp.firing=1;
+		sp.getPosition(ship);
+		sp.shoot=0;
+	}
+	if(sp.firing)
+	{
+		sp.move();
+		if(sp.y > 500)
+		{
+			sp.firing=0;
+			sp.y=-10;
+		}
+	}
+}
+
+
+void gamedisplay()
+{
+	if(level >= 10)
+	{
+		enemyspeed +=0.5;
+		if(enemyspeed==4)
+			enemyspeed=2;
+		level=0;
+		if(NumberOfEnemiesPerFrame <= 5)
+		 NumberOfEnemiesPerFrame++;
+	}
+
+	showstars();
+
+	drawship();
+	drawenemy();
+	drawbullet();
+	drawspecial();
+	BulletsVsEnemyCollisionTest();
+	MyShipVsEnemyCollisionTest();
+	SpecialWeaponVsEnemyCollisionTest();
+	displayText();
+	glFlush();
+    Sleep(10);
+	glutSwapBuffers();
+	glutPostRedisplay();
+}
 void move(int x, int y)
 {
-	if(x>=33&&x<=467)
+	if(x>=33&&x<=475)
 	ship.x=x;
-	cout<<ship.x<<endl;
 	glutPostRedisplay();
 }
 void reshape(int w, int h)
@@ -150,15 +346,113 @@ void reshape(int w, int h)
 	double asp=(float)w/(float)h;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    glOrtho(0,500,0,500,-10,10);
+		glOrtho(0,500,0,500,-10,10);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glutPostRedisplay();
 
 }
+void Reinitialization()
+{
+	gamestate=game;
+	ship.Constructor();
+
+	enemyspeed=2;
+	hea=100;
+	spec=5;
+	sco=0;
+	int i;
+	for(i=0;i<NumberOfEnemiesPerFrame;i++)
+	{
+		e[i].init();
+	}
+	NumberOfEnemiesPerFrame=4;
+showstars();
+}
+void keyboard(unsigned char key, int x, int y)
+{
+	switch(key)
+	{
+		case 'Z':
+		case 'z':	if(ship.alive)
+					{ship.shoot=1;
+				NumberOfBulletsPerFrame++;}
+			break;
+		case 'X':
+		case 'x': if(ship.alive && !sp.firing && spec > 0)
+			{
+			sp.shoot=1;
+			spec--;
+		case 'R':
+		case 'r': if(gamestate == over)
+			{
+					Reinitialization();
+			}
+		case '1': if(gamestate == startScreen)
+                    {
+                        gamestate=game;
+                        glutPostRedisplay();
+                    }
+                 break;
+		case '2': if(gamestate == startScreen)
+                    {
+                    gamestate=instructionScreen;
+                    glutPostRedisplay();
+                    }
+                    break;
+		case 'b': if(gamestate == instructionScreen)
+                  {
+                    gamestate=startScreen;
+                    glutPostRedisplay();
+                  }
+		}
+
+		break;
+
+	}
+	glutPostRedisplay();
+}
+void overdisplay()
+{
+	char text1[]="GAME OVER";
+	char text2[]="You Scored ";
+	char text3[]="Press \'r\' to restart";
+	char ch[]={'0','0','0'};
+	char c;
+	int rem;
+	int temp=sco;
+
+	glColor3f(1,0,0);
+	glRasterPos2f(180,250);
+	int i;
+	for(i=0;i<sizeof(text1);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text1[i]);
+	glRasterPos2f(180,150);
+	for(i=0;i<sizeof(text2);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text2[i]);
+	i=2;
+	do
+	{
+		rem=temp%10;
+		temp=temp/10;
+		c='0'+rem;
+		ch[i]=c;
+		i--;
+	}while(temp);
+	for(i=0;i<sizeof(ch);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,ch[i]);
+	glRasterPos2f(180,130);
+
+	for(i=0;i<sizeof(text3);i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text3[i]);
+
+	 glFlush();
+	 glutSwapBuffers();
+}
 void startScreenDisplay()
 {
-    char text0[]="DODGER\n";
+
+	char text0[]="DODGER\n";
 	char text1[]="Press 1 to Play\n";
 	char text2[]="Press 2 for Instructions\n";
 	char dev[]="Developed by\n";
@@ -167,6 +461,7 @@ void startScreenDisplay()
 	char cgl[]="For Computer Graphics";
 	char cgl1[]="AND";
 	char cgl2[]="Visualisation Laboratory Project";
+	enemy e1,e2,e3,e4;
     glColor3f(1,1,1);
 
 	glRasterPos2f(170,320);
@@ -197,7 +492,21 @@ void startScreenDisplay()
      glRasterPos2f(125,70);
 		for(i=0;i<sizeof(cgl2);i++)
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,cgl2[i]);
-
+    showstars_home();
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glTranslated(20,450,0);
+    e1.draw();
+    glTranslated(-20,-450,0);
+    glTranslated(160,450,0);
+    e1.draw();
+    glTranslated(-160,-450,0);
+    glTranslated(310,450,0);
+    e1.draw();
+    glTranslated(-310,-450,0);
+    glTranslated(460,450,0);
+    e1.draw();
+    glTranslated(-460,-450,0);
 	glFlush();
 	glutPostRedisplay();
 	glutSwapBuffers();
@@ -212,91 +521,49 @@ void displayInstructions()
 	{
 		glRasterPos2f(50,height);
 		for(j=0;j<sizeof(text[i]);j++)
-            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text[i][j]);
+		{
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,text[i][j]);
+		}
 		height=height-50;
 	}
-    glFlush();
-    glutSwapBuffers();
-}
-void drawship()
-{
+		glFlush();
+		glutSwapBuffers();
 
-	double x=ship.x;
-	double y=ship.y;
-	glLineWidth(1);
-	glColor3f(1,1,1);
-	if(ship.alive)
-	{
 
-		ship.displayShip();
-    }
-    FireBulletsIfShot();
-}
-void gamedisplay()
-{
-    drawenemy();
-    drawship();
-	drawbullet();
-	glFlush();
-	Sleep(4);
-	glutSwapBuffers();
-	glutPostRedisplay();
 }
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	switch(gamestate)
 	{
-        case game: gamedisplay();
+		case game: gamedisplay();
 		break;
-        case startScreen: startScreenDisplay();
+		case over: overdisplay();
+		break;
+		case startScreen: startScreenDisplay();
 		break;
 		case instructionScreen: displayInstructions();
 		break;
 	}
+
+
 }
 void myinit()
 {
 	int i;
 	int inc=10;
     glClearColor(20/255.0,20/255.0,20/255.0,1);
-    for(i=0;i<481;i++)
+	for(i=0;i<n;i++)
+	{
+		s[i].x=rand()%600;
+		s[i].y=rand()%600;
+
+	}
+	for(i=0;i<481;i++)
 	{
 		enemyX[i]=inc;
 		inc++;
 	}
-}
-void keyboard(unsigned char key, int x, int y)
-{
-	switch(key)
-	{
-
-        case 'Z':
-		case 'z':	if(ship.alive)
-					{ship.shoot=1;
-				NumberOfBulletsPerFrame++;}
-			break;
-        case '1': if(gamestate == startScreen)
-                    {
-                        gamestate=game;
-                        glutPostRedisplay();
-                    }
-                 break;
-
-		case '2': if(gamestate == startScreen)
-                    {
-                        gamestate=instructionScreen;
-                        glutPostRedisplay();
-                    }
-                    break;
-		case 'b': if(gamestate == instructionScreen)
-                  {
-                     gamestate=startScreen;
-                     glutPostRedisplay();
-                  }
-
-	}
-	glutPostRedisplay();
 }
 
 
@@ -306,16 +573,14 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 	glutInitWindowSize(600,600);
 	glutInitWindowPosition(400,0);
-	glutCreateWindow("Dodger");
+	glutCreateWindow("Dogder");
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
-    glutPassiveMotionFunc(move);
-    glutKeyboardFunc(keyboard);
+	glutPassiveMotionFunc(move);
+	glutKeyboardFunc(keyboard);
 	glutSetCursor(GLUT_CURSOR_NONE);
 	glEnable(GL_TEXTURE_2D);
 	myinit();
 	glutMainLoop();
 	return 0;
 }
-
-

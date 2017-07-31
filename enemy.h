@@ -17,7 +17,7 @@ class enemy
 
 	void init()
 	{
-		x=enemyX[rand()%481];
+		x=enemyX[rand()%475];
 		y=500;
 		alive=1;
 		explode=0;

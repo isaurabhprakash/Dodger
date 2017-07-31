@@ -46,6 +46,7 @@
 		<Unit filename="enemy.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="myship.h" />
+		<Unit filename="special.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
