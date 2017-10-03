@@ -13,3 +13,7 @@ Final Score is shown on the Game Over Screen and the user is given an option to 
 
 ## Screenshots
 ![Start Screen](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Start%20Screen.png)
+![Instruction](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Instruction.png)
+![Gameplay](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Gameplay.png)
+![Special](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Special.png)
+![Game Over](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Game%20Over.png)
