@@ -11,4 +11,5 @@ After each collision with the enemy spaceship, the health of the player decrease
 Health and number of Special Weapons left is shown on the top left of the screen. Score is shown on the top right of the screen. 
 Final Score is shown on the Game Over Screen and the user is given an option to restart the game.
 
-##Screenshots
+## Screenshots
+![Start Screen](https://github.com/saurabhprakash-25/Dodger/blob/master/Screenshots/Start%20Screen.png)
