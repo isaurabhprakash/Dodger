@@ -106,8 +106,11 @@ void drawship()
 	else if(ship.explode)
 	{
 		ship.explosion();
-		gamestate=over;
-		glutPostRedisplay();
+//		if(ship.r == 30)
+//		{
+			gamestate=over;
+			glutPostRedisplay();
+//		}
 	}
 	FireBulletsIfShot();
 
@@ -151,6 +154,7 @@ void drawenemy()
 		}
 		if(e[i].explode==1)
 		{
+			e[i].explosion();
 			if(e[i].r == 20)
 			{
 				e[i].init();
@@ -317,6 +321,7 @@ void gamedisplay()
 		 NumberOfEnemiesPerFrame++;
 	}
 
+	// glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	showstars();
 
 	drawship();
@@ -328,14 +333,16 @@ void gamedisplay()
 	SpecialWeaponVsEnemyCollisionTest();
 	displayText();
 	glFlush();
+//	system("sleep 0.00001");
     Sleep(10);
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
 void move(int x, int y)
 {
-	if(x>=33&&x<=475)
+	if(x<500)
 	ship.x=x;
+	cout<<x<<endl;
 	glutPostRedisplay();
 }
 void reshape(int w, int h)
@@ -584,3 +591,5 @@ int main(int argc, char** argv)
 	glutMainLoop();
 	return 0;
 }
+
+

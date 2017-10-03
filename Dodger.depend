@@ -247,3 +247,24 @@
 
 1501473867 c:\users\saurabh\desktop\dodger\special.h
 
+1506992088 source:d:\projects\dodger\main.cpp
+	<GL/glut.h>
+	<stdlib.h>
+	<iostream>
+	<math.h>
+	"star.h"
+	"myship.h"
+	"enemy.h"
+	"bullet.h"
+	"special.h"
+
+1506991972 d:\projects\dodger\star.h
+
+1506991930 d:\projects\dodger\myship.h
+
+1506992216 d:\projects\dodger\enemy.h
+
+1506991887 d:\projects\dodger\bullet.h
+
+1506991952 d:\projects\dodger\special.h
+

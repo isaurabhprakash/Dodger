@@ -33,11 +33,10 @@ class bullet
             for (int i=0; i<360; i++)
             {
                 float degInRad = i*DEG2RAD;
-                glVertex2f(x+cos(degInRad)*3,y+5+sin(degInRad)*3);
-                //glVertex2f(x+cos(degInRad)*5,y+sin(degInRad)*5+10);
+                glVertex2f(x+cos(degInRad)*3,y+sin(degInRad)*3);
             }
 
-   glEnd();
+            glEnd();
 
 		}
 		void move(int offset)

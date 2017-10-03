@@ -1,3 +1,4 @@
+
 int enemyX[481];
 class enemy
 {
@@ -17,7 +18,7 @@ class enemy
 
 	void init()
 	{
-		x=enemyX[rand()%475];
+		x=enemyX[rand()%480];
 		y=500;
 		alive=1;
 		explode=0;
@@ -75,6 +76,24 @@ class enemy
 	void move(float offset)
 	{
 		y=y-offset;
+	}
+	void explosion()
+	{
+		float i,j,J;
+		float asp;
+		glColor3f(1,1,0);
+		for(i=x-r;i<=x+r;i++)
+		{
+			asp=r*r-(i-x)*(i-x);
+			j=sqrt(asp)+y;
+			J=-sqrt(asp)+y;
+			glBegin(GL_POINTS);
+				glVertex2f(i,j);
+				glVertex2f(i,J);
+			glEnd();
+		}
+		r++;
+		y--;
 	}
 };
 
